@@ -1,0 +1,28 @@
+# Distribution / packaging
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Database connection settings
+thiscovery_admin/settings/development.py
+thiscovery_admin/settings/staging.py
+thiscovery_admin/settings/production.py
+
+.idea
+.pytest_cache/
+tests/.pytest_cache/
+
+
