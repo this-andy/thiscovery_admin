@@ -22,6 +22,7 @@ class User(TimeStampedModel):
     title = models.CharField(max_length=20, blank=True, null=True)
     first_name = models.CharField(max_length=50, blank=True, null=True)
     last_name = models.CharField(max_length=50, blank=True, null=True)
+    country_code = models.CharField(max_length=2, blank=True, null=True)
     auth0_id = models.CharField(max_length=50, blank=True, null=True)
     status = models.CharField(max_length=12, blank=True, null=True)
 
