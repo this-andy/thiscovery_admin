@@ -20,6 +20,7 @@ var/
 thiscovery_admin/settings/development.py
 thiscovery_admin/settings/staging.py
 thiscovery_admin/settings/production.py
+thiscovery_admin/settings/test.py
 
 .idea
 .pytest_cache/
