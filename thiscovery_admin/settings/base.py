@@ -25,7 +25,7 @@ SECRET_KEY = '-1mm!-*tu=vfkw$e47z--od)^s703ui%kn^i-xp0g(u+13hcva'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['.ngrok.io', '127.0.0.1']
 
 
 # Application definition
@@ -52,11 +52,12 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'thiscovery_admin.urls'
 
+TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, '../../templates')]
-        ,
+        'DIRS': [TEMPLATES_DIR,],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
