@@ -110,6 +110,7 @@ class ProjectTask(TimeStampedModel):
     testing_group = models.ForeignKey(UserGroup, null=True, blank=True, on_delete=models.SET_NULL)
     external_system = models.ForeignKey(ExternalSystem, null=True, blank=True, on_delete=models.SET_NULL)
     external_task_id = models.CharField(max_length=50, null=True, blank=True)
+    base_url = models.CharField(max_length=100, null=True, blank=True)
     status = models.CharField(max_length=12, choices=STATUS_CHOICES)
 
     @property
