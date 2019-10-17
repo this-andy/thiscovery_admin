@@ -38,6 +38,7 @@ class User(TimeStampedModel):
 class UserGroup(TimeStampedModel):
     name = models.CharField(max_length=50)
     short_name = models.CharField(max_length=20, blank=True)
+    url_code = models.CharField(max_length=20, blank=True)
 
     def __str__(self):
         return get_display_name(self)
