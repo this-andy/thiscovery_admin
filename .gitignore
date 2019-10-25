@@ -27,3 +27,4 @@ thiscovery_admin/settings/test.py
 tests/.pytest_cache/
 
 
+/thiscovery_admin/settings/exp.py
