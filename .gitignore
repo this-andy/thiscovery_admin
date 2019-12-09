@@ -17,14 +17,18 @@ var/
 *.egg
 
 # Database connection settings
-thiscovery_admin/settings/development.py
-thiscovery_admin/settings/staging.py
 thiscovery_admin/settings/production.py
+thiscovery_admin/settings/staging.py
+thiscovery_admin/settings/exp.py
+thiscovery_admin/settings/development.py
 thiscovery_admin/settings/test.py
+thiscovery_admin/settings/dev-afs25.py
+thiscovery_admin/settings/test-afs25.py
 
 .idea
 .pytest_cache/
 tests/.pytest_cache/
 
 
-/thiscovery_admin/settings/exp.py
+
+
