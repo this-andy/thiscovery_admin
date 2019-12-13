@@ -1,3 +1,4 @@
+from django.contrib.postgres.fields import JSONField
 from django.db import models
 import uuid
 from ..models import TimeStampedModel
@@ -113,6 +114,7 @@ class ProjectTask(TimeStampedModel):
     external_task_id = models.CharField(max_length=50, null=True, blank=True)
     base_url = models.CharField(max_length=100, null=True, blank=True)
     status = models.CharField(max_length=12, choices=STATUS_CHOICES)
+    progress_info = JSONField(default=dict)
 
     @property
     def short_name(self):
@@ -156,6 +158,7 @@ class UserTask(TimeStampedModel):
     project_task = models.ForeignKey(ProjectTask, on_delete=models.CASCADE)
     status = models.CharField(max_length=12, blank=True, null=True, choices=STATUS_CHOICES)
     consented = models.DateTimeField(null=True)
+    progress_info = JSONField(default=dict)
 
     @property
     def short_name(self):

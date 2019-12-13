@@ -30,6 +30,5 @@ thiscovery_admin/settings/test-afs25.py
 .pytest_cache/
 tests/.pytest_cache/
 
-
-
-
+# virtual environments
+/venv-mint/

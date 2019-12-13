@@ -1,6 +1,7 @@
 from django.db import models
 import uuid
 
+
 class TimeStampedModel(models.Model):
     # an abstract class that provides self-updating datetime fields
 
