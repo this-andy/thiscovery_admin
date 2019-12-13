@@ -115,6 +115,7 @@ class ProjectTask(TimeStampedModel):
     base_url = models.CharField(max_length=100, null=True, blank=True)
     status = models.CharField(max_length=12, choices=STATUS_CHOICES)
     progress_info = JSONField(default=dict)
+    progress_info_modified = models.DateTimeField(auto_now=True)
 
     @property
     def short_name(self):
