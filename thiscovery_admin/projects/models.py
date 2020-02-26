@@ -46,10 +46,15 @@ class UserGroup(TimeStampedModel):
 
 
 class ExternalSystem(TimeStampedModel):
+    DISPLAY_METHOD_CHOICES = (
+        ('redirect', 'Redirect'),
+        ('iframe', 'iFrame'),
+    )
+
     name = models.CharField(max_length=50)
     short_name = models.CharField(max_length=20, blank=True)
     external_user_id_type = models.CharField(max_length=10, blank=True, null=True)  # uuid, integer, string
-
+    display_method = models.CharField(max_length=12, choices=DISPLAY_METHOD_CHOICES, blank=True, null=True)
 
     def __str__(self):
         return get_display_name(self)
