@@ -224,6 +224,9 @@ class ProjectGroupVisibility(TimeStampedModel):
     def __str__(self):
         return self.short_name + ' {' + str(self.id) + '}'
 
+    class Meta:
+        verbose_name_plural = "Project group visibilities"
+
 
 class ProjectTaskGroupVisibility(TimeStampedModel):
     project_task = models.ForeignKey(ProjectTask, on_delete=models.CASCADE)
@@ -235,3 +238,6 @@ class ProjectTaskGroupVisibility(TimeStampedModel):
 
     def __str__(self):
         return self.short_name + ' {' + str(self.id) + '}'
+
+    class Meta:
+        verbose_name_plural = "Project task group visibilities"

@@ -1,17 +1,20 @@
-from django.contrib.admin import AdminSite
+import django.contrib.admin as admin
+from django.contrib.auth.models import Group, User as DjangoUser
+from django.contrib.auth.admin import GroupAdmin, UserAdmin
 
 from .models import Project, TaskType, ProjectTask, UserTask, UserProject, ExternalSystem, UserExternalAccount, User, UserGroup, \
     UserGroupMembership, ProjectGroupVisibility, ProjectTaskGroupVisibility
 
 
-class MyAdminSite(AdminSite):
+class MyAdminSite(admin.AdminSite):
     site_header = 'Thiscovery administration'
     site_title = 'Thiscovery site admin'
 
 
 admin_site = MyAdminSite(name="myadmin")
 
-
+admin_site.register(Group, GroupAdmin)
+admin_site.register(DjangoUser, UserAdmin)
 admin_site.register(Project)
 admin_site.register(TaskType)
 admin_site.register(ProjectTask)
