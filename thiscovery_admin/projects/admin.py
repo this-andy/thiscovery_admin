@@ -11,11 +11,35 @@ class MyAdminSite(admin.AdminSite):
     site_title = 'Thiscovery site admin'
 
 
+class ProjectTaskInline(admin.TabularInline):
+    model = ProjectTask
+    extra = 0
+
+
+class ProjectAdmin(admin.ModelAdmin):
+    list_display = [
+        'name',
+        'status',
+        'visibility',
+        'number_of_tasks',
+        'visible_to_user_groups',
+        'testing_group',
+    ]
+    list_filter = [
+        'status',
+        'visibility',
+        ('testing_group', admin.RelatedOnlyFieldListFilter),
+    ]
+    inlines = [
+        ProjectTaskInline,
+    ]
+
+
 admin_site = MyAdminSite(name="myadmin")
 
 admin_site.register(Group, GroupAdmin)
 admin_site.register(DjangoUser, UserAdmin)
-admin_site.register(Project)
+admin_site.register(Project, ProjectAdmin)
 admin_site.register(TaskType)
 admin_site.register(ProjectTask)
 admin_site.register(UserProject)

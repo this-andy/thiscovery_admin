@@ -42,7 +42,8 @@ class UserGroup(TimeStampedModel):
     url_code = models.CharField(max_length=20, blank=True)
 
     def __str__(self):
-        return get_display_name(self)
+        # return get_display_name(self)
+        return self.short_name
 
 
 class ExternalSystem(TimeStampedModel):
@@ -80,6 +81,12 @@ class Project(TimeStampedModel):
 
     def __str__(self):
         return get_display_name(self) + ' (' + str(self.status) + ')'
+
+    def number_of_tasks(self):
+        return ProjectTask.objects.filter(project=self.id).count()
+
+    def visible_to_user_groups(self):
+        return [UserGroup.objects.get(id=x.user_group_id) for x in ProjectGroupVisibility.objects.filter(project=self.id)]
 
 
 class TaskType(TimeStampedModel):
