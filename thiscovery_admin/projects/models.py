@@ -58,8 +58,8 @@ class ExternalSystem(TimeStampedModel):
     display_method = models.CharField(max_length=12, choices=DISPLAY_METHOD_CHOICES, blank=True, null=True)
 
     def __str__(self):
-        return get_display_name(self)
-
+        # return get_display_name(self)
+        return self.short_name
 
 class Project(TimeStampedModel):
     STATUS_CHOICES = (
@@ -80,13 +80,14 @@ class Project(TimeStampedModel):
     status = models.CharField(max_length=12, choices=STATUS_CHOICES)
 
     def __str__(self):
-        return get_display_name(self) + ' (' + str(self.status) + ')'
+        # return get_display_name(self) + ' (' + str(self.status) + ')'
+        return self.short_name
 
     def number_of_tasks(self):
         return ProjectTask.objects.filter(project=self.id).count()
 
-    def visible_to_user_groups(self):
-        return [UserGroup.objects.get(id=x.user_group_id) for x in ProjectGroupVisibility.objects.filter(project=self.id)]
+    def user_groups(self):
+        return ", ".join([UserGroup.objects.get(id=x.user_group_id).short_name for x in ProjectGroupVisibility.objects.filter(project=self.id)])
 
 
 class TaskType(TimeStampedModel):
@@ -94,7 +95,8 @@ class TaskType(TimeStampedModel):
     short_name = models.CharField(max_length=20, blank=True)
 
     def __str__(self):
-        return get_display_name(self)
+        # return get_display_name(self)
+        return self.short_name
 
 
 class ProjectTask(TimeStampedModel):
@@ -139,6 +141,15 @@ class ProjectTask(TimeStampedModel):
 
     def __str__(self):
         return self.short_name + ' (' + str(self.status) + ') {' + str(self.id) + '}'
+
+    def project_visibility(self):
+        return self.project.visibility
+
+    def project_status(self):
+        return self.project.status
+
+    def user_groups(self):
+        return ", ".join([UserGroup.objects.get(id=x.user_group_id).short_name for x in ProjectTaskGroupVisibility.objects.filter(project_task=self.id)])
 
 
 class UserProject(TimeStampedModel):

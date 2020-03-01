@@ -11,18 +11,44 @@ class MyAdminSite(admin.AdminSite):
     site_title = 'Thiscovery site admin'
 
 
-class ProjectTaskInline(admin.TabularInline):
+class ProjectGroupVisibilityInLine(admin.StackedInline):
+    model = ProjectGroupVisibility
+    extra = 0
+
+
+class ProjectTaskInline(admin.StackedInline):
     model = ProjectTask
     extra = 0
 
 
+class ProjectTaskGroupVisibilityInLine(admin.StackedInline):
+    model = ProjectTaskGroupVisibility
+    extra = 0
+
+
 class ProjectAdmin(admin.ModelAdmin):
+    fields = [
+        'name',
+        'short_name',
+        'visibility',
+        # 'website_highlight',
+        'testing_group',
+        'status',
+        'user_groups',
+    ]
+    readonly_fields = [
+        'user_groups',
+    ]
+    inlines = [
+        ProjectTaskInline,
+        ProjectGroupVisibilityInLine,
+    ]
     list_display = [
         'name',
         'status',
         'visibility',
         'number_of_tasks',
-        'visible_to_user_groups',
+        'user_groups',
         'testing_group',
     ]
     list_filter = [
@@ -30,8 +56,41 @@ class ProjectAdmin(admin.ModelAdmin):
         'visibility',
         ('testing_group', admin.RelatedOnlyFieldListFilter),
     ]
+
+
+class ProjectTaskAdmin(admin.ModelAdmin):
+    exclude = [
+        'earliest_start_date',
+        'closing_date',
+        'website_highlight',
+    ]
+    readonly_fields = [
+        'progress_info',
+    ]
     inlines = [
-        ProjectTaskInline,
+        ProjectTaskGroupVisibilityInLine,
+    ]
+    list_display = [
+        'short_name',
+        'task_type',
+        'status',
+        'signup_status',
+        'visibility',
+        'user_groups',
+        'testing_group',
+        'external_system',
+        'project',
+        'project_status',
+        'project_visibility',
+    ]
+    list_filter = [
+        'project',
+        'task_type',
+        'status',
+        'signup_status',
+        'visibility',
+        'external_system',
+        ('testing_group', admin.RelatedOnlyFieldListFilter),
     ]
 
 
@@ -41,7 +100,7 @@ admin_site.register(Group, GroupAdmin)
 admin_site.register(DjangoUser, UserAdmin)
 admin_site.register(Project, ProjectAdmin)
 admin_site.register(TaskType)
-admin_site.register(ProjectTask)
+admin_site.register(ProjectTask, ProjectTaskAdmin)
 admin_site.register(UserProject)
 admin_site.register(UserTask)
 admin_site.register(ExternalSystem)
