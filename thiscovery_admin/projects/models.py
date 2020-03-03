@@ -17,9 +17,6 @@ def get_display_name(self):
 
 class User(TimeStampedModel):
     email = models.CharField(max_length=100, blank=True, null=True)
-    email_address_verified = models.BooleanField(default=False)
-    email_verification_token = models.UUIDField(default=uuid.uuid4(), null=True, editable=False)
-    email_verification_expiry = models.DateTimeField(null=True, editable=False)
     title = models.CharField(max_length=20, blank=True, null=True)
     first_name = models.CharField(max_length=50, blank=True, null=True)
     last_name = models.CharField(max_length=50, blank=True, null=True)
