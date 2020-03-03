@@ -1,6 +1,7 @@
 import django.contrib.admin as admin
+import nested_admin
 from django.contrib.auth.models import Group, User as DjangoUser
-from django.contrib.auth.admin import GroupAdmin, UserAdmin
+from django.contrib.auth.admin import GroupAdmin, UserAdmin as DjangoUserAdmin
 
 from .models import Project, TaskType, ProjectTask, UserTask, UserProject, ExternalSystem, UserExternalAccount, User, UserGroup, \
     UserGroupMembership, ProjectGroupVisibility, ProjectTaskGroupVisibility
@@ -9,6 +10,25 @@ from .models import Project, TaskType, ProjectTask, UserTask, UserProject, Exter
 class MyAdminSite(admin.AdminSite):
     site_header = 'Thiscovery administration'
     site_title = 'Thiscovery site admin'
+
+
+# region Inlines
+class ReadOnlyMixin:
+    """
+    Use this mixin to make any Inline class readonly.
+
+    Usage example:
+        class ProjectTaskNestedReadOnlyInline(ReadOnlyMixin, nested_admin.NestedTabularInline):
+            ...
+    """
+    def has_change_permission(self, request, obj=None):
+        return False
+
+    def has_add_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
 
 
 class ProjectGroupVisibilityInLine(admin.StackedInline):
@@ -21,11 +41,41 @@ class ProjectTaskInline(admin.StackedInline):
     extra = 0
 
 
-class ProjectTaskGroupVisibilityInLine(admin.StackedInline):
+class ProjectTaskNestedReadOnlyInline(ReadOnlyMixin, nested_admin.NestedTabularInline):
+    model = ProjectTask
+    fields = [
+        'description',
+        'task_type',
+        'status',
+        'signup_status',
+        'visibility',
+        'external_system',
+    ]
+
+
+class ProjectNestedReadOnlyInline(ReadOnlyMixin, nested_admin.NestedTabularInline):
+    model = Project
+    fields = [
+        'name',
+        'visibility',
+        'status'
+    ]
+    inlines = [ProjectTaskNestedReadOnlyInline]
+
+
+class ProjectTaskGroupVisibilityInline(admin.StackedInline):
     model = ProjectTaskGroupVisibility
     extra = 0
 
 
+class UserGroupMembershipInline(nested_admin.NestedTabularInline):
+    model = UserGroupMembership
+    extra = 0
+    ordering = ['user__last_name']
+# endregion
+
+
+# region ModelAdmins
 class ProjectAdmin(admin.ModelAdmin):
     fields = [
         'name',
@@ -68,7 +118,7 @@ class ProjectTaskAdmin(admin.ModelAdmin):
         'progress_info',
     ]
     inlines = [
-        ProjectTaskGroupVisibilityInLine,
+        ProjectTaskGroupVisibilityInline,
     ]
     list_display = [
         'short_name',
@@ -94,10 +144,23 @@ class ProjectTaskAdmin(admin.ModelAdmin):
     ]
 
 
+class UserGroupAdmin(nested_admin.NestedModelAdmin):
+    inlines = [
+        UserGroupMembershipInline,
+        ProjectNestedReadOnlyInline,
+    ]
+    list_display = [
+        'short_name',
+        'url_code',
+        'number_of_users',
+    ]
+# endregion
+
+
 admin_site = MyAdminSite(name="myadmin")
 
 admin_site.register(Group, GroupAdmin)
-admin_site.register(DjangoUser, UserAdmin)
+admin_site.register(DjangoUser, DjangoUserAdmin)
 admin_site.register(Project, ProjectAdmin)
 admin_site.register(TaskType)
 admin_site.register(ProjectTask, ProjectTaskAdmin)
@@ -106,7 +169,7 @@ admin_site.register(UserTask)
 admin_site.register(ExternalSystem)
 admin_site.register(UserExternalAccount)
 admin_site.register(User)
-admin_site.register(UserGroup)
+admin_site.register(UserGroup, UserGroupAdmin)
 admin_site.register(UserGroupMembership)
 admin_site.register(ProjectGroupVisibility)
 admin_site.register(ProjectTaskGroupVisibility)

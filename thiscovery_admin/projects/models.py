@@ -29,7 +29,8 @@ class User(TimeStampedModel):
     status = models.CharField(max_length=12, blank=True, null=True)
 
     def __str__(self):
-        return self.email + ' (' + self.full_name + ') {' + str(self.id) + '}'
+        # return self.email + ' (' + self.full_name + ') {' + str(self.id) + '}'
+        return self.email + ' (' + self.full_name + ')'
 
     @property
     def full_name(self):
@@ -44,6 +45,9 @@ class UserGroup(TimeStampedModel):
     def __str__(self):
         # return get_display_name(self)
         return self.short_name
+
+    def number_of_users(self):
+        return len([User.objects.get(id=x.user_id) for x in UserGroupMembership.objects.filter(user_group=self)])
 
 
 class ExternalSystem(TimeStampedModel):
