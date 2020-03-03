@@ -34,11 +34,15 @@ class ReadOnlyMixin:
 class ProjectGroupVisibilityInLine(admin.StackedInline):
     model = ProjectGroupVisibility
     extra = 0
+    verbose_name = 'User group'
+    verbose_name_plural = 'User groups'
+    classes = ['collapse']
 
 
 class ProjectTaskInline(admin.StackedInline):
     model = ProjectTask
     extra = 0
+    classes = ['collapse']
 
 
 class ProjectTaskNestedReadOnlyInline(ReadOnlyMixin, nested_admin.NestedTabularInline):
@@ -51,6 +55,7 @@ class ProjectTaskNestedReadOnlyInline(ReadOnlyMixin, nested_admin.NestedTabularI
         'visibility',
         'external_system',
     ]
+    classes = ['collapse']
 
 
 class ProjectNestedReadOnlyInline(ReadOnlyMixin, nested_admin.NestedTabularInline):
@@ -61,21 +66,46 @@ class ProjectNestedReadOnlyInline(ReadOnlyMixin, nested_admin.NestedTabularInlin
         'status'
     ]
     inlines = [ProjectTaskNestedReadOnlyInline]
+    classes = ['collapse']
 
 
 class ProjectTaskGroupVisibilityInline(admin.StackedInline):
     model = ProjectTaskGroupVisibility
     extra = 0
+    verbose_name = 'User group'
+    verbose_name_plural = 'User groups'
+    classes = ['collapse']
 
 
 class UserGroupMembershipInline(nested_admin.NestedTabularInline):
     model = UserGroupMembership
     extra = 0
+    fields = [
+        'user',
+        'user_name',
+        'user_email',
+    ]
+    readonly_fields = [
+        'user_name',
+        'user_email',
+    ]
+    autocomplete_fields = ['user']
     ordering = ['user__last_name']
+    verbose_name = 'Member'
+    verbose_name_plural = 'Members'
+    classes = ['collapse']
 # endregion
 
 
 # region ModelAdmins
+class UserAdmin(admin.ModelAdmin):
+    search_fields = [
+        'email',
+        'first_name',
+        'last_name',
+    ]
+
+
 class ProjectAdmin(admin.ModelAdmin):
     fields = [
         'name',
@@ -168,7 +198,7 @@ admin_site.register(UserProject)
 admin_site.register(UserTask)
 admin_site.register(ExternalSystem)
 admin_site.register(UserExternalAccount)
-admin_site.register(User)
+admin_site.register(User, UserAdmin)
 admin_site.register(UserGroup, UserGroupAdmin)
 admin_site.register(UserGroupMembership)
 admin_site.register(ProjectGroupVisibility)

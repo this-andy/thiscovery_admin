@@ -231,6 +231,14 @@ class UserGroupMembership(TimeStampedModel):
     def short_name(self):
         return '-'.join([self.user.full_name, self.user_group.short_name])
 
+    @property
+    def user_name(self):
+        return self.user.full_name
+
+    @property
+    def user_email(self):
+        return self.user.email
+
     def __str__(self):
         return self.short_name + ' {' + str(self.id) + '}'
 
