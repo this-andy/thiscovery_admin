@@ -26,7 +26,8 @@ class User(TimeStampedModel):
     status = models.CharField(max_length=12, blank=True, null=True)
 
     def __str__(self):
-        return self.email + ' (' + self.full_name + ') {' + str(self.id) + '}'
+        # return self.email + ' (' + self.full_name + ') {' + str(self.id) + '}'
+        return self.email + ' (' + self.full_name + ')'
 
     @property
     def full_name(self):
@@ -39,7 +40,11 @@ class UserGroup(TimeStampedModel):
     url_code = models.CharField(max_length=20, blank=True)
 
     def __str__(self):
-        return get_display_name(self)
+        # return get_display_name(self)
+        return self.short_name
+
+    def number_of_users(self):
+        return len([User.objects.get(id=x.user_id) for x in UserGroupMembership.objects.filter(user_group=self)])
 
 
 class ExternalSystem(TimeStampedModel):
@@ -54,8 +59,8 @@ class ExternalSystem(TimeStampedModel):
     display_method = models.CharField(max_length=12, choices=DISPLAY_METHOD_CHOICES, blank=True, null=True)
 
     def __str__(self):
-        return get_display_name(self)
-
+        # return get_display_name(self)
+        return self.short_name
 
 class Project(TimeStampedModel):
     STATUS_CHOICES = (
@@ -76,7 +81,14 @@ class Project(TimeStampedModel):
     status = models.CharField(max_length=12, choices=STATUS_CHOICES)
 
     def __str__(self):
-        return get_display_name(self) + ' (' + str(self.status) + ')'
+        # return get_display_name(self) + ' (' + str(self.status) + ')'
+        return self.short_name
+
+    def number_of_tasks(self):
+        return ProjectTask.objects.filter(project=self.id).count()
+
+    def user_groups(self):
+        return ", ".join([UserGroup.objects.get(id=x.user_group_id).short_name for x in ProjectGroupVisibility.objects.filter(project=self.id)])
 
 
 class TaskType(TimeStampedModel):
@@ -84,7 +96,8 @@ class TaskType(TimeStampedModel):
     short_name = models.CharField(max_length=20, blank=True)
 
     def __str__(self):
-        return get_display_name(self)
+        # return get_display_name(self)
+        return self.short_name
 
 
 class ProjectTask(TimeStampedModel):
@@ -129,6 +142,15 @@ class ProjectTask(TimeStampedModel):
 
     def __str__(self):
         return self.short_name + ' (' + str(self.status) + ') {' + str(self.id) + '}'
+
+    def project_visibility(self):
+        return self.project.visibility
+
+    def project_status(self):
+        return self.project.status
+
+    def user_groups(self):
+        return ", ".join([UserGroup.objects.get(id=x.user_group_id).short_name for x in ProjectTaskGroupVisibility.objects.filter(project_task=self.id)])
 
 
 class UserProject(TimeStampedModel):
@@ -206,6 +228,14 @@ class UserGroupMembership(TimeStampedModel):
     def short_name(self):
         return '-'.join([self.user.full_name, self.user_group.short_name])
 
+    @property
+    def user_name(self):
+        return self.user.full_name
+
+    @property
+    def user_email(self):
+        return self.user.email
+
     def __str__(self):
         return self.short_name + ' {' + str(self.id) + '}'
 
@@ -221,6 +251,9 @@ class ProjectGroupVisibility(TimeStampedModel):
     def __str__(self):
         return self.short_name + ' {' + str(self.id) + '}'
 
+    class Meta:
+        verbose_name_plural = "Project group visibilities"
+
 
 class ProjectTaskGroupVisibility(TimeStampedModel):
     project_task = models.ForeignKey(ProjectTask, on_delete=models.CASCADE)
@@ -232,3 +265,6 @@ class ProjectTaskGroupVisibility(TimeStampedModel):
 
     def __str__(self):
         return self.short_name + ' {' + str(self.id) + '}'
+
+    class Meta:
+        verbose_name_plural = "Project task group visibilities"
