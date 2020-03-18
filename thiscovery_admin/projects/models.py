@@ -27,11 +27,11 @@ class User(TimeStampedModel):
 
     def __str__(self):
         # return self.email + ' (' + self.full_name + ') {' + str(self.id) + '}'
-        return self.email + ' (' + self.full_name + ')'
+        return f"{self.email} ({self.full_name})"
 
     @property
     def full_name(self):
-        return str(self.first_name) + ' ' + str(self.last_name)
+        return f"{self.first_name} {self.last_name}"
 
 
 class UserGroup(TimeStampedModel):
