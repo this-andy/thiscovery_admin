@@ -73,8 +73,8 @@ class Project(TimeStampedModel):
         ('public', 'Public'),
         ('private', 'Private'),
     )
-    name = models.CharField(max_length=50)
-    short_name = models.CharField(max_length=20, blank=True)
+    name = models.CharField(max_length=150)
+    short_name = models.CharField(max_length=80, blank=True)
     visibility = models.CharField(max_length=12, choices=VISIBILITY_CHOICES)
     website_highlight = models.BooleanField(default=False)
     testing_group = models.ForeignKey(UserGroup, null=True, blank=True, on_delete=models.SET_NULL)
