@@ -4,6 +4,13 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
+    """
+    Applying this migration might lead to error:
+    django.db.utils.NotSupportedError: cannot alter type of a column used by a view or rule
+
+    If so, the workaround is to delete all database views, apply this migration, then recreate the views using the
+    script in thiscovery-core
+    """
 
     dependencies = [
         ('projects', '0047_auto_20200326_1205'),
