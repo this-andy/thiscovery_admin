@@ -141,7 +141,8 @@ class ProjectTask(TimeStampedModel):
         return display_name
 
     def __str__(self):
-        return self.short_name + ' (' + str(self.status) + ') {' + str(self.id) + '}'
+        # return self.short_name + ' (' + str(self.status) + ') {' + str(self.id) + '}'
+        return self.short_name
 
     def project_visibility(self):
         return self.project.visibility
