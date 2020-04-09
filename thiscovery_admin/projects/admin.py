@@ -174,6 +174,23 @@ class ProjectTaskAdmin(admin.ModelAdmin):
     ]
 
 
+class UserTaskAdmin(admin.ModelAdmin):
+    list_display = [
+        'short_name',
+        'status',
+        'project_task',
+    ]
+    list_filter = [
+        'project_task',
+        'status',
+        # 'signup_status',
+        # 'visibility',
+        # 'external_system',
+        # ('testing_group', admin.RelatedOnlyFieldListFilter),
+    ]
+    pass
+
+
 class UserGroupAdmin(nested_admin.NestedModelAdmin):
     inlines = [
         UserGroupMembershipInline,
@@ -195,7 +212,7 @@ admin_site.register(Project, ProjectAdmin)
 admin_site.register(TaskType)
 admin_site.register(ProjectTask, ProjectTaskAdmin)
 admin_site.register(UserProject)
-admin_site.register(UserTask)
+admin_site.register(UserTask, UserTaskAdmin)
 admin_site.register(ExternalSystem)
 admin_site.register(UserExternalAccount)
 admin_site.register(User, UserAdmin)
