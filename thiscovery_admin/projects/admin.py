@@ -159,6 +159,7 @@ class ProjectTaskAdmin(admin.ModelAdmin):
         ProjectTaskGroupVisibilityInline,
     ]
     list_display = [
+        'id',
         'short_name',
         'task_type',
         'status',
