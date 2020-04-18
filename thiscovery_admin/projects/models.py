@@ -188,7 +188,7 @@ class UserTask(TimeStampedModel):
     consented = models.DateTimeField(null=True)
     progress_info = JSONField(null=True, blank=True)
     ext_user_task_id = models.UUIDField(blank=True, null=True)
-    url = models.CharField(max_length=500, null=True, blank=True)
+    user_task_url = models.CharField(max_length=500, null=True, blank=True)
 
     @property
     def short_name(self):
