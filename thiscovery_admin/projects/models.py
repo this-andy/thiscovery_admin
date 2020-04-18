@@ -142,7 +142,8 @@ class ProjectTask(TimeStampedModel):
         return display_name
 
     def __str__(self):
-        return self.short_name + ' (' + str(self.status) + ') {' + str(self.id) + '}'
+        # return self.short_name + ' (' + str(self.status) + ') {' + str(self.id) + '}'
+        return self.short_name
 
     def project_visibility(self):
         return self.project.visibility
@@ -191,11 +192,13 @@ class UserTask(TimeStampedModel):
 
     @property
     def short_name(self):
-        return '-'.join([self.user_project.short_name, self.project_task.short_name])
+        # return '-'.join([self.user_project.short_name, self.project_task.short_name])
+        user = self.user_project.user
+        return f"{user.full_name} ({user.email}) - {self.project_task.short_name}"
 
     def __str__(self):
-        return self.short_name + ' {' + str(self.id) + '}'
-
+        # return self.short_name + ' {' + str(self.id) + '}'
+        return self.short_name
 
 class UserExternalAccount(TimeStampedModel):
     STATUS_CHOICES = (

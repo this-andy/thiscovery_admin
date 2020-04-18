@@ -2,6 +2,7 @@ import django.contrib.admin as admin
 import nested_admin
 from django.contrib.auth.models import Group, User as DjangoUser
 from django.contrib.auth.admin import GroupAdmin, UserAdmin as DjangoUserAdmin
+from django.db.models import F
 
 from .models import Project, TaskType, ProjectTask, UserTask, UserProject, ExternalSystem, UserExternalAccount, User, UserGroup, \
     UserGroupMembership, ProjectGroupVisibility, ProjectTaskGroupVisibility
@@ -103,6 +104,13 @@ class UserAdmin(admin.ModelAdmin):
         'email',
         'first_name',
         'last_name',
+        'id',
+    ]
+    list_display = [
+        'email',
+        'first_name',
+        'last_name',
+        'id',
     ]
 
 
@@ -151,6 +159,7 @@ class ProjectTaskAdmin(admin.ModelAdmin):
         ProjectTaskGroupVisibilityInline,
     ]
     list_display = [
+        'id',
         'short_name',
         'task_type',
         'status',
@@ -171,6 +180,36 @@ class ProjectTaskAdmin(admin.ModelAdmin):
         'visibility',
         'external_system',
         ('testing_group', admin.RelatedOnlyFieldListFilter),
+    ]
+
+
+class UserTaskAdmin(admin.ModelAdmin):
+
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        queryset = queryset.annotate(
+            _user_name=F("user_project__user__first_name"),
+        )
+        return queryset
+
+    def sortable_short_name(self, obj):
+        return obj.short_name
+
+    sortable_short_name.admin_order_field = '_user_name'
+
+    list_display = [
+        'sortable_short_name',
+        'status',
+        'project_task',
+    ]
+    list_filter = [
+        'project_task',
+        'status',
+    ]
+    search_fields = [
+        'user_project__user__email',
+        'user_project__user__first_name',
+        'user_project__user__last_name',
     ]
 
 
@@ -195,7 +234,7 @@ admin_site.register(Project, ProjectAdmin)
 admin_site.register(TaskType)
 admin_site.register(ProjectTask, ProjectTaskAdmin)
 admin_site.register(UserProject)
-admin_site.register(UserTask)
+admin_site.register(UserTask, UserTaskAdmin)
 admin_site.register(ExternalSystem)
 admin_site.register(UserExternalAccount)
 admin_site.register(User, UserAdmin)
