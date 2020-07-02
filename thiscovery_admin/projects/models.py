@@ -129,6 +129,7 @@ class ProjectTask(TimeStampedModel):
     external_task_id = models.CharField(max_length=50, null=True, blank=True)
     base_url = models.CharField(max_length=100, null=True, blank=True)
     user_specific_url = models.BooleanField(default=False)
+    anonymise_url = models.BooleanField(default=True)
     status = models.CharField(max_length=12, choices=STATUS_CHOICES)
     progress_info = JSONField(null=True, blank=True)
     progress_info_modified = models.DateTimeField(auto_now=True, null=True, blank=True)
@@ -164,7 +165,7 @@ class UserProject(TimeStampedModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     status = models.CharField(max_length=12, blank=True, null=True, choices=STATUS_CHOICES)
-    ext_user_project_id = models.UUIDField(blank=True, null=True)
+    anon_project_specific_user_id = models.UUIDField(blank=True, null=True)
 
     @property
     def short_name(self):
@@ -187,7 +188,7 @@ class UserTask(TimeStampedModel):
     status = models.CharField(max_length=12, blank=True, null=True, choices=STATUS_CHOICES)
     consented = models.DateTimeField(null=True)
     progress_info = JSONField(null=True, blank=True)
-    ext_user_task_id = models.UUIDField(blank=True, null=True)
+    anon_user_task_id = models.UUIDField(blank=True, null=True)
     user_task_url = models.CharField(max_length=500, null=True, blank=True)
 
     @property
