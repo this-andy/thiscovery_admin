@@ -129,7 +129,6 @@ class ProjectTask(TimeStampedModel):
     external_task_id = models.CharField(max_length=50, null=True, blank=True)
     base_url = models.CharField(max_length=100, null=True, blank=True)
     user_specific_url = models.BooleanField(default=False)
-    anonymise_url = models.BooleanField(default=True)
     status = models.CharField(max_length=12, choices=STATUS_CHOICES)
     progress_info = JSONField(null=True, blank=True)
     progress_info_modified = models.DateTimeField(auto_now=True, null=True, blank=True)
