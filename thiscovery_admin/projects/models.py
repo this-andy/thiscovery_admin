@@ -165,6 +165,7 @@ class UserProject(TimeStampedModel):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     status = models.CharField(max_length=12, blank=True, null=True, choices=STATUS_CHOICES)
     ext_user_project_id = models.UUIDField(blank=True, null=True)
+    anon_project_specific_user_id = models.UUIDField(blank=True, null=True)
 
     @property
     def short_name(self):
@@ -188,6 +189,7 @@ class UserTask(TimeStampedModel):
     consented = models.DateTimeField(null=True)
     progress_info = JSONField(null=True, blank=True)
     ext_user_task_id = models.UUIDField(blank=True, null=True)
+    anon_user_task_id = models.UUIDField(blank=True, null=True)
     user_task_url = models.CharField(max_length=500, null=True, blank=True)
 
     @property
