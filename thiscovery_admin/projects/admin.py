@@ -5,7 +5,7 @@ from django.contrib.auth.admin import GroupAdmin, UserAdmin as DjangoUserAdmin
 from django.db.models import F
 
 from .models import Project, TaskType, ProjectTask, UserTask, UserProject, ExternalSystem, UserExternalAccount, User, UserGroup, \
-    UserGroupMembership, ProjectGroupVisibility, ProjectTaskGroupVisibility
+    UserGroupMembership, ProjectGroupVisibility, ProjectTaskGroupVisibility, AnonId
 
 
 class MyAdminSite(admin.AdminSite):
@@ -101,16 +101,16 @@ class UserGroupMembershipInline(nested_admin.NestedTabularInline):
 # region ModelAdmins
 class UserAdmin(admin.ModelAdmin):
     search_fields = [
+        'id',
         'email',
         'first_name',
         'last_name',
-        'id',
     ]
     list_display = [
+        'id',
         'email',
         'first_name',
         'last_name',
-        'id',
     ]
 
 
@@ -132,6 +132,7 @@ class ProjectAdmin(admin.ModelAdmin):
         ProjectGroupVisibilityInLine,
     ]
     list_display = [
+        'id',
         'name',
         'status',
         'visibility',
@@ -198,15 +199,20 @@ class UserTaskAdmin(admin.ModelAdmin):
     sortable_short_name.admin_order_field = '_user_name'
 
     list_display = [
+        'id',
         'sortable_short_name',
         'status',
         'project_task',
+    ]
+    list_display_links = [
+        'sortable_short_name',
     ]
     list_filter = [
         'project_task',
         'status',
     ]
     search_fields = [
+        'id',
         'user_project__user__email',
         'user_project__user__first_name',
         'user_project__user__last_name',
@@ -219,9 +225,37 @@ class UserGroupAdmin(nested_admin.NestedModelAdmin):
         ProjectNestedReadOnlyInline,
     ]
     list_display = [
+        'id',
         'short_name',
         'url_code',
         'number_of_users',
+    ]
+
+
+class AnonIdAdmin(admin.ModelAdmin):
+    list_display = [
+        'anon_user_task_id',
+        'anon_project_specific_user_id',
+        'user_id',
+        'email',
+        'project_id',
+        'project_name',
+        'user_task_id',
+        'project_task_id',
+        'project_task_description',
+    ]
+    list_display_links = None
+    search_fields = [
+        'anon_user_task_id',
+        'anon_project_specific_user_id',
+        'user_id',
+        'email',
+        'user_task_id',
+        'project_task_id',
+    ]
+    list_filter = [
+        'project_name',
+        'project_task_description',
     ]
 # endregion
 
@@ -242,3 +276,4 @@ admin_site.register(UserGroup, UserGroupAdmin)
 admin_site.register(UserGroupMembership)
 admin_site.register(ProjectGroupVisibility)
 admin_site.register(ProjectTaskGroupVisibility)
+admin_site.register(AnonId, AnonIdAdmin)
