@@ -44,7 +44,7 @@ class UserGroup(TimeStampedModel):
         return self.short_name
 
     def number_of_users(self):
-        return len([User.objects.get(id=x.user_id) for x in UserGroupMembership.objects.filter(user_group=self)])
+        return len(UserGroupMembership.objects.filter(user_group=self))
 
 
 class ExternalSystem(TimeStampedModel):
@@ -276,3 +276,23 @@ class ProjectTaskGroupVisibility(TimeStampedModel):
 
     class Meta:
         verbose_name_plural = "Project task group visibilities"
+
+
+class AnonId(models.Model):
+    """
+    This enables database view user_tasks_with_anon_ids to be displayed in the Django
+    admin interface
+    """
+    anon_user_task_id = models.UUIDField()
+    anon_project_specific_user_id = models.UUIDField()
+    user_id = models.UUIDField()
+    email = models.CharField(max_length=100)
+    project_name = models.CharField(max_length=150)
+    project_id = models.UUIDField()
+    user_task_id = models.UUIDField()
+    project_task_id = models.UUIDField()
+    project_task_description = models.CharField(max_length=500)
+
+    class Meta:
+        managed = False
+        db_table = "user_tasks_with_anon_ids"
