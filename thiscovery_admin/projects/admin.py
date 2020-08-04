@@ -217,6 +217,14 @@ class UserTaskAdmin(admin.ModelAdmin):
         'user_project__user__first_name',
         'user_project__user__last_name',
     ]
+    raw_id_fields = [
+        'user_project',
+        'project_task',
+    ]
+    readonly_fields = [
+        'user_project',
+        'project_task',
+    ]
 
 
 class UserGroupAdmin(nested_admin.NestedModelAdmin):

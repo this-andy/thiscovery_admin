@@ -203,6 +203,7 @@ class UserTask(TimeStampedModel):
         # return self.short_name + ' {' + str(self.id) + '}'
         return self.short_name
 
+
 class UserExternalAccount(TimeStampedModel):
     STATUS_CHOICES = (
         ('active', 'Active'),
