@@ -1,11 +1,35 @@
+import csv
 import django.contrib.admin as admin
 import nested_admin
 from django.contrib.auth.models import Group, User as DjangoUser
 from django.contrib.auth.admin import GroupAdmin, UserAdmin as DjangoUserAdmin
 from django.db.models import F
+from django.http import HttpResponse
 
 from .models import Project, TaskType, ProjectTask, UserTask, UserProject, ExternalSystem, UserExternalAccount, User, UserGroup, \
     UserGroupMembership, ProjectGroupVisibility, ProjectTaskGroupVisibility, AnonId
+
+
+class ExportCsvMixin:
+    """
+    https://books.agiliq.com/projects/django-admin-cookbook/en/latest/export.html
+    """
+    def export_as_csv(self, request, queryset):
+
+        meta = self.model._meta
+        field_names = [field.name for field in meta.fields]
+
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename={}.csv'.format(meta)
+        writer = csv.writer(response)
+
+        writer.writerow(field_names)
+        for obj in queryset:
+            row = writer.writerow([getattr(obj, field) for field in field_names])
+
+        return response
+
+    export_as_csv.short_description = "Export selected"
 
 
 class MyAdminSite(admin.AdminSite):
@@ -184,7 +208,37 @@ class ProjectTaskAdmin(admin.ModelAdmin):
     ]
 
 
-class UserTaskAdmin(admin.ModelAdmin):
+class UserTaskAdmin(admin.ModelAdmin, ExportCsvMixin):
+
+    def export_user_ids_action(self, request, queryset):
+        """
+        Exports selected User Tasks to a csv file, including user_id and anon_project_specific_user_id
+        """
+        meta = self.model._meta
+        field_names = [field.name for field in meta.fields]
+
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename={}.csv'.format(meta)
+        writer = csv.writer(response)
+
+        writer.writerow(
+            [
+                'user_id',
+                'anon_project_specific_user_id',
+                *field_names
+            ]
+        )
+        for obj in queryset:
+            writer.writerow(
+                [
+                    obj.user_project.user.id,
+                    obj.user_project.anon_project_specific_user_id,
+                    *[getattr(obj, field) for field in field_names]
+                ]
+            )
+        return response
+
+    export_user_ids_action.short_description = "Export user_ids for Selected"
 
     def get_queryset(self, request):
         queryset = super().get_queryset(request)
@@ -217,6 +271,11 @@ class UserTaskAdmin(admin.ModelAdmin):
         'user_project__user__first_name',
         'user_project__user__last_name',
     ]
+    actions = [
+        'export_as_csv',
+        'export_user_ids_action',
+    ]
+
     raw_id_fields = [
         'user_project',
         'project_task',
