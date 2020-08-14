@@ -245,7 +245,10 @@ class UserTaskAdmin(admin.ModelAdmin, ExportCsvMixin):
         queryset = queryset.annotate(
             _user_name=F("user_project__user__first_name"),
         )
-        return queryset
+        if request.user.is_superuser:
+            return queryset
+        else:
+            return queryset.filter(status="complete")
 
     def sortable_short_name(self, obj):
         return obj.short_name
