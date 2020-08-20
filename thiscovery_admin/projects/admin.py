@@ -172,6 +172,38 @@ class ProjectAdmin(admin.ModelAdmin):
 
 
 class ProjectTaskAdmin(admin.ModelAdmin):
+
+    def export_user_group_url_codes_action(self, request, queryset):
+        """
+        Exports selected Project Tasks to a csv file, including the url_code of each user group
+        """
+        meta = self.model._meta
+        field_names = [field.name for field in meta.fields]
+
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename={}.csv'.format(meta)
+        writer = csv.writer(response)
+
+        writer.writerow(
+            [
+                'user_group_url_code',
+                *field_names
+            ]
+        )
+        for obj in queryset:
+            writer.writerow(
+                [
+                    obj.user_group_codes,
+                    *[getattr(obj, field) for field in field_names]
+                ]
+            )
+        return response
+
+    export_user_group_url_codes_action.short_description = "Export url_codes for selected"
+
+    actions = [
+        'export_user_group_url_codes_action',
+    ]
     exclude = [
         'earliest_start_date',
         'closing_date',
@@ -186,6 +218,7 @@ class ProjectTaskAdmin(admin.ModelAdmin):
     list_display = [
         'id',
         'short_name',
+        'user_group_codes',
         'task_type',
         'status',
         'signup_status',

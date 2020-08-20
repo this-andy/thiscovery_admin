@@ -155,6 +155,10 @@ class ProjectTask(TimeStampedModel):
     def user_groups(self):
         return ", ".join([UserGroup.objects.get(id=x.user_group_id).short_name for x in ProjectTaskGroupVisibility.objects.filter(project_task=self.id)])
 
+    @property
+    def user_group_codes(self):
+        return ", ".join([UserGroup.objects.get(id=x.user_group_id).url_code for x in ProjectTaskGroupVisibility.objects.filter(project_task=self.id)])
+
 
 class UserProject(TimeStampedModel):
     STATUS_CHOICES = (
