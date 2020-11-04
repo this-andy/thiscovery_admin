@@ -127,7 +127,7 @@ class ProjectTask(TimeStampedModel):
     testing_group = models.ForeignKey(UserGroup, null=True, blank=True, on_delete=models.SET_NULL)
     external_system = models.ForeignKey(ExternalSystem, null=True, blank=True, on_delete=models.SET_NULL)
     external_task_id = models.CharField(max_length=50, null=True, blank=True)
-    base_url = models.CharField(max_length=100, null=True, blank=True)
+    base_url = models.CharField(max_length=200, null=True, blank=True)
     anonymise_url = models.BooleanField(default=True)
     user_specific_url = models.BooleanField(default=False)
     status = models.CharField(max_length=12, choices=STATUS_CHOICES)
