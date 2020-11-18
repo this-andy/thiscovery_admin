@@ -110,10 +110,12 @@ class UserGroupMembershipInline(nested_admin.NestedTabularInline):
         'user',
         'user_name',
         'user_email',
+        'user_id',
     ]
     readonly_fields = [
         'user_name',
         'user_email',
+        'user_id',
     ]
     autocomplete_fields = ['user']
     ordering = ['user__last_name']
