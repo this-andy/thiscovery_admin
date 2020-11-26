@@ -1,6 +1,7 @@
 import csv
 import django.contrib.admin as admin
 import nested_admin
+import uuid
 from django.contrib.auth.models import Group, User as DjangoUser
 from django.contrib.auth.admin import GroupAdmin, UserAdmin as DjangoUserAdmin
 from django.db.models import F
@@ -109,10 +110,12 @@ class UserGroupMembershipInline(nested_admin.NestedTabularInline):
         'user',
         'user_name',
         'user_email',
+        'user_id',
     ]
     readonly_fields = [
         'user_name',
         'user_email',
+        'user_id',
     ]
     autocomplete_fields = ['user']
     ordering = ['user__last_name']
@@ -135,7 +138,28 @@ class UserAdmin(admin.ModelAdmin):
         'email',
         'first_name',
         'last_name',
+        'anon_project_specific_user_ids',
     ]
+
+    def get_search_results(self, request, queryset, search_term):
+        """
+        Overwrites default get_search_results method to enable searching users by anon_project_specific_user_id
+        https://docs.djangoproject.com/en/dev/ref/contrib/admin/#django.contrib.admin.ModelAdmin.get_search_results
+        """
+        queryset, use_distinct = super().get_search_results(request, queryset, search_term)
+        try:
+            uuid.UUID(search_term, version=4)
+        except (ValueError, TypeError):
+            pass
+        else:
+            if not queryset:  # queryset is empty so searched UUID did not match any user_ids; try match by anon id instead
+                try:
+                    user_id = UserProject.objects.filter(anon_project_specific_user_id=search_term)[0].user_id
+                except IndexError:
+                    pass
+                else:
+                    queryset = self.model.objects.filter(id=user_id)
+        return queryset, use_distinct
 
 
 class ProjectAdmin(admin.ModelAdmin):

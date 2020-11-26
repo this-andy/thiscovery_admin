@@ -33,6 +33,10 @@ class User(TimeStampedModel):
     def full_name(self):
         return f"{self.first_name} {self.last_name}"
 
+    @property
+    def anon_project_specific_user_ids(self):
+        return [x.anon_project_specific_user_id for x in UserProject.objects.filter(user_id=self)]
+
 
 class UserGroup(TimeStampedModel):
     name = models.CharField(max_length=50)
