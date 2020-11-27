@@ -95,9 +95,19 @@ class ProjectNestedReadOnlyInline(ReadOnlyMixin, nested_admin.NestedTabularInlin
     classes = ['collapse']
 
 
-class ProjectTaskGroupVisibilityInline(admin.StackedInline):
+class ProjectTaskGroupVisibilityInline(admin.TabularInline):
     model = ProjectTaskGroupVisibility
     extra = 0
+    fields = [
+        'user_group',
+        'user_group_short_name',
+        'user_group_url_code',
+    ]
+    readonly_fields = [
+        'user_group_short_name',
+        'user_group_url_code',
+    ]
+    autocomplete_fields = ['user_group']
     verbose_name = 'User group'
     verbose_name_plural = 'User groups'
     classes = ['collapse']
@@ -118,7 +128,7 @@ class UserGroupMembershipInline(nested_admin.NestedTabularInline):
         'user_id',
     ]
     autocomplete_fields = ['user']
-    ordering = ['user__last_name']
+    ordering = ['modified']
     verbose_name = 'Member'
     verbose_name_plural = 'Members'
     classes = ['collapse']
@@ -348,12 +358,19 @@ class UserGroupAdmin(nested_admin.NestedModelAdmin):
         UserGroupMembershipInline,
         ProjectNestedReadOnlyInline,
     ]
+    search_fields = [
+        'id',
+        'name',
+        'short_name',
+        'url_code',
+    ]
     list_display = [
         'id',
         'short_name',
         'url_code',
         'number_of_users',
     ]
+    ordering = ['short_name']
 
 
 class AnonIdAdmin(admin.ModelAdmin):
