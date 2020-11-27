@@ -280,6 +280,14 @@ class ProjectTaskGroupVisibility(TimeStampedModel):
     def short_name(self):
         return '-'.join([self.project_task.short_name, self.user_group.short_name])
 
+    @property
+    def user_group_short_name(self):
+        return self.user_group.short_name
+
+    @property
+    def user_group_url_code(self):
+        return self.user_group.url_code
+
     def __str__(self):
         return self.short_name + ' {' + str(self.id) + '}'
 
