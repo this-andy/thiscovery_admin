@@ -180,6 +180,7 @@ class ProjectAdmin(admin.ModelAdmin):
         # 'website_highlight',
         'testing_group',
         'status',
+        'demo',
         'user_groups',
     ]
     readonly_fields = [

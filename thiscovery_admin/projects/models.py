@@ -272,15 +272,6 @@ class ProjectGroupVisibility(TimeStampedModel):
 
     class Meta:
         verbose_name_plural = "Project group visibilities"
-        constraints = [  # maybe the constraint I am trying to implement is not possible: https://stackoverflow.com/a/60633653
-                         # https://stackoverflow.com/a/60799459
-            models.CheckConstraint(
-                name='%(class)s_demo_status_valid',
-                check=models.Q(
-                    project__demo=True
-                )
-            )
-        ]
 
 
 class ProjectTaskGroupVisibility(TimeStampedModel):
