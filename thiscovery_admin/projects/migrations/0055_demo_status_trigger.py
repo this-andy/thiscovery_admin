@@ -1,8 +1,11 @@
 from django.db import migrations
 
 
-create_func_sql = """
-CREATE OR REPLACE FUNCTION validate_ProjectGroupVisibility_demo_status() RETURNS trigger AS $validate_ProjectGroupVisibility_demo_status$
+trigger_function_name = 'validate_ProjectGroupVisibility_demo_status'
+
+
+create_func_sql = f"""
+CREATE OR REPLACE FUNCTION {trigger_function_name}() RETURNS trigger AS ${trigger_function_name}$
     DECLARE
         project_demo_status     boolean;
         group_demo_status       boolean;
@@ -16,7 +19,7 @@ CREATE OR REPLACE FUNCTION validate_ProjectGroupVisibility_demo_status() RETURNS
             project_demo_status, group_demo_status; 
         END IF;
     END;
-$validate_ProjectGroupVisibility_demo_status$ LANGUAGE plpgsql;
+${trigger_function_name}$ LANGUAGE plpgsql;
 """
 
 
@@ -29,13 +32,13 @@ class Migration(migrations.Migration):
     operations = [
         migrations.RunSQL(
             sql=create_func_sql,
-            reverse_sql='DROP FUNCTION IF EXISTS validate_ProjectGroupVisibility_demo_status();',
+            reverse_sql=f'DROP FUNCTION IF EXISTS {trigger_function_name}();',
         ),
         migrations.RunSQL(
-            sql='CREATE TRIGGER validate_ProjectGroupVisibility_demo_status '
-                'BEFORE INSERT OR UPDATE ON public.projects_projectgroupvisibility '
-                'FOR EACH ROW EXECUTE PROCEDURE validate_ProjectGroupVisibility_demo_status();',
-            reverse_sql='DROP TRIGGER IF EXISTS validate_ProjectGroupVisibility_demo_status ON '
+            sql=f'CREATE TRIGGER {trigger_function_name} '
+                f'BEFORE INSERT OR UPDATE ON public.projects_projectgroupvisibility '
+                f'FOR EACH ROW EXECUTE PROCEDURE {trigger_function_name}();',
+            reverse_sql=f'DROP TRIGGER IF EXISTS {trigger_function_name} ON '
                         'public.projects_projectgroupvisibility;'
         ),
     ]
