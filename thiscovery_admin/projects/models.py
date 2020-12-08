@@ -42,6 +42,7 @@ class UserGroup(TimeStampedModel):
     name = models.CharField(max_length=50)
     short_name = models.CharField(max_length=20, blank=True)
     url_code = models.CharField(max_length=20, blank=True)
+    demo = models.BooleanField(default=False)
 
     def __str__(self):
         # return get_display_name(self)
@@ -83,6 +84,7 @@ class Project(TimeStampedModel):
     website_highlight = models.BooleanField(default=False)
     testing_group = models.ForeignKey(UserGroup, null=True, blank=True, on_delete=models.SET_NULL)
     status = models.CharField(max_length=12, choices=STATUS_CHOICES)
+    demo = models.BooleanField(default=False)
 
     def __str__(self):
         # return get_display_name(self) + ' (' + str(self.status) + ')'
