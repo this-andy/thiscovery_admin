@@ -195,6 +195,7 @@ class ProjectAdmin(admin.ModelAdmin):
         'name',
         'status',
         'visibility',
+        'demo',
         'number_of_tasks',
         'user_groups',
         'testing_group',
@@ -369,6 +370,7 @@ class UserGroupAdmin(nested_admin.NestedModelAdmin):
         'id',
         'short_name',
         'url_code',
+        'demo',
         'number_of_users',
     ]
     ordering = ['short_name']
