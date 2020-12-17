@@ -182,6 +182,7 @@ class ProjectAdmin(admin.ModelAdmin):
         # 'website_highlight',
         'testing_group',
         'status',
+        'demo',
         'user_groups',
     ]
     readonly_fields = [
@@ -196,6 +197,7 @@ class ProjectAdmin(admin.ModelAdmin):
         'name',
         'status',
         'visibility',
+        'demo',
         'number_of_tasks',
         'user_groups',
         'testing_group',
@@ -369,6 +371,7 @@ class UserGroupAdmin(admin.ModelAdmin):
         'id',
         'short_name',
         'url_code',
+        'demo',
         'number_of_users',
     ]
     ordering = ['short_name']
