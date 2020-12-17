@@ -6,6 +6,7 @@ from django.contrib.auth.models import Group, User as DjangoUser
 from django.contrib.auth.admin import GroupAdmin, UserAdmin as DjangoUserAdmin
 from django.db.models import F
 from django.http import HttpResponse
+from django_admin_inline_paginator.admin import TabularInlinePaginated
 
 from .models import Project, TaskType, ProjectTask, UserTask, UserProject, ExternalSystem, UserExternalAccount, User, UserGroup, \
     UserGroupMembership, ProjectGroupVisibility, ProjectTaskGroupVisibility, AnonId
@@ -113,7 +114,9 @@ class ProjectTaskGroupVisibilityInline(admin.TabularInline):
     classes = ['collapse']
 
 
-class UserGroupMembershipInline(nested_admin.NestedTabularInline):
+# class UserGroupMembershipInline(nested_admin.NestedTabularInline):
+class UserGroupMembershipInline(TabularInlinePaginated):
+    per_page = 50
     model = UserGroupMembership
     extra = 0
     fields = [
@@ -353,7 +356,8 @@ class UserTaskAdmin(admin.ModelAdmin, ExportCsvMixin):
     ]
 
 
-class UserGroupAdmin(nested_admin.NestedModelAdmin):
+# class UserGroupAdmin(nested_admin.NestedModelAdmin):
+class UserGroupAdmin(admin.ModelAdmin):
     inlines = [
         UserGroupMembershipInline,
         ProjectNestedReadOnlyInline,
