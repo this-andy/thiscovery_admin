@@ -114,7 +114,6 @@ class ProjectTaskGroupVisibilityInline(admin.TabularInline):
     classes = ['collapse']
 
 
-# class UserGroupMembershipInline(nested_admin.NestedTabularInline):
 class UserGroupMembershipInline(TabularInlinePaginated):
     per_page = 50
     model = UserGroupMembership
@@ -356,11 +355,9 @@ class UserTaskAdmin(admin.ModelAdmin, ExportCsvMixin):
     ]
 
 
-# class UserGroupAdmin(nested_admin.NestedModelAdmin):
 class UserGroupAdmin(admin.ModelAdmin):
     inlines = [
         UserGroupMembershipInline,
-        ProjectNestedReadOnlyInline,
     ]
     search_fields = [
         'id',
