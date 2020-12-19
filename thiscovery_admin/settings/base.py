@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'nested_admin',
+    'django_admin_inline_paginator',
     'thiscovery_admin.projects',
 ]
 
