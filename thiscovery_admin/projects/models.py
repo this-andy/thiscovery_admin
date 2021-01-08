@@ -79,12 +79,14 @@ class Project(TimeStampedModel):
         ('private', 'Private'),
     )
     name = models.CharField(max_length=150)
-    short_name = models.CharField(max_length=80, blank=True)
+    short_name = models.CharField(max_length=80)
+    description = models.CharField(max_length=500, default='')
     visibility = models.CharField(max_length=12, choices=VISIBILITY_CHOICES)
     website_highlight = models.BooleanField(default=False)
     testing_group = models.ForeignKey(UserGroup, null=True, blank=True, on_delete=models.SET_NULL)
     status = models.CharField(max_length=12, choices=STATUS_CHOICES)
     demo = models.BooleanField(default=False)
+    project_page_url = models.CharField(max_length=200, null=True, blank=True)
 
     def __str__(self):
         # return get_display_name(self) + ' (' + str(self.status) + ')'
@@ -124,6 +126,8 @@ class ProjectTask(TimeStampedModel):
     )
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     task_type = models.ForeignKey(TaskType, on_delete=models.CASCADE)
+    name = models.CharField(max_length=150)
+    short_name = models.CharField(max_length=80)
     description = models.CharField(max_length=500, default='')
     earliest_start_date = models.DateTimeField(null=True, blank=True)
     closing_date = models.DateTimeField(null=True, blank=True)
@@ -139,14 +143,7 @@ class ProjectTask(TimeStampedModel):
     status = models.CharField(max_length=12, choices=STATUS_CHOICES)
     progress_info = JSONField(null=True, blank=True)
     progress_info_modified = models.DateTimeField(auto_now=True, null=True, blank=True)
-
-    @property
-    def short_name(self):
-        if self.description == '':
-            display_name = '-'.join([self.project.short_name, self.task_type.short_name])
-        else:
-            display_name = self.description
-        return display_name
+    task_page_url = models.CharField(max_length=200, null=True, blank=True)
 
     def __str__(self):
         # return self.short_name + ' (' + str(self.status) + ') {' + str(self.id) + '}'
