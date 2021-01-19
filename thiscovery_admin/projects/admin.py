@@ -176,8 +176,9 @@ class UserAdmin(admin.ModelAdmin):
 
 class ProjectAdmin(admin.ModelAdmin):
     fields = [
-        'name',
         'short_name',
+        'name',
+        'description',
         'visibility',
         # 'website_highlight',
         'testing_group',
@@ -194,7 +195,7 @@ class ProjectAdmin(admin.ModelAdmin):
     ]
     list_display = [
         'id',
-        'name',
+        'short_name',
         'status',
         'visibility',
         'demo',
