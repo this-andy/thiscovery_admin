@@ -179,6 +179,7 @@ class ProjectAdmin(admin.ModelAdmin):
         'short_name',
         'name',
         'description',
+        'project_page_url',
         'visibility',
         # 'website_highlight',
         'testing_group',
